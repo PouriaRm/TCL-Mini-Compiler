@@ -16,7 +16,7 @@ These are the steps to take and the result:
 
 First, Generate a java class with [Jflex](https://jflex.de) from ScannerCup.flex. Then add a new class to the root folder. Now copy the above code and paste it in test.txt. Run the Main.java and see the result.
 
-Here is an example:
+Here is the answer:
 
 ![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase1.gif)
 
@@ -42,7 +42,7 @@ puts "Bye"
 Like pervious stage.
 
 #### Note: Change the code in above box and trace it again. What will you see?
-Here is an example:
+Here is the answer:
 
 ![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase2.gif)
 
@@ -59,9 +59,8 @@ proc number { bg h } {
 puts "Hello"
 }
 puts [number bb 2]
-
 ```
-First, Run it. see the result.
+First, Run it. See the result.
 
 What will happen if we delete this line?
 ```
@@ -81,10 +80,11 @@ or:
 puts [number bb 2 rb]
 ```
 
-Here is an example: 
+Here is the answer:
 
 
 ![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase3.gif)
 
-
+##Question?
+Please let me know if you have any questions.
 
