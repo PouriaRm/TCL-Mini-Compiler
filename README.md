@@ -45,3 +45,46 @@ Like pervious stage.
 Here is an example:
 
 ![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase2.gif)
+
+## Semantic Analysis
+In this phase, we map (multiple) occurrences of class, method and variable names in a program, to their (unique) definition. Also we should consider Type checking in this phase.
+
+Function comparison in size and type are good examples in this section:
+See the code box below:
+```
+set a 10
+set a df
+set y 5
+proc number { bg h } {
+puts "Hello"
+}
+puts [number bb 2]
+
+```
+First, Run it. see the result.
+
+What will happen if we delete this line?
+```
+set a df
+```
+
+what will happen if we change number of parameters?
+
+```
+proc number { bg } {
+```
+
+or:
+
+
+```
+puts [number bb 2 rb]
+```
+
+Here is an example: 
+
+
+![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase3.gif)
+
+
+
