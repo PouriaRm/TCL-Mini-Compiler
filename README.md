@@ -14,6 +14,10 @@ puts tempt
 ```
 These are the steps to take and the result:
 
+First, Generate a java class with [Jflex](https://jflex.de) from ScannerCup.flex. Then add a new class to the root folder. Now copy the above code and paste it in test.txt. Run the Main.java and see the result.
+
+Here is an example:
+
 ![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase1.gif)
 
 ## Syntax Analysis 
@@ -33,9 +37,10 @@ puts "Bye"
 }
 }
 ```
-### How to use it?
+### How to test it?
 
-First, Generate a java class with [Jflex](https://jflex.de) from ScannerCup.flex. Then add a new class to the root folder. Now copy the above code and paste it in test.txt. Run the Main.java and see the result.
+Like pervious stage.
+
 #### Note: Change the above code and trace it again. What will you see?
 Here is an example:
 
