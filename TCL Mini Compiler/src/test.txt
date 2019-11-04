@@ -1,0 +1,6 @@
+set a 10
+set a df
+proc number { bg h } {
+puts "Hello"
+}
+puts [ number bb 2 ] 

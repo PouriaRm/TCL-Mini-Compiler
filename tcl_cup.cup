@@ -1,0 +1,174 @@
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+
+action code {:  
+  java.util.ArrayList<String> symtable = new  
+   java.util.ArrayList<String> ();  
+   java.util.ArrayList<Object> parameter = new  
+   java.util.ArrayList<Object> ();  
+    java.util.ArrayList<Object> value = new  
+   java.util.ArrayList<Object> (); 
+  java.util.Map<String,List<Object>> functable = new 
+  java.util.HashMap<String,List<Object>>();
+   
+  private void printSymbol(String s){ 
+      System.out.println( s ); 
+  } 
+  private void checkFunction(String funName, ArrayList<Object> list) {
+		
+		List<Object> paramlist = functable.get(funName);
+		printSymbol(paramlist.size() + " :RealFunParamlist" + list.size() + " :listParameterSize.");
+		
+		if(paramlist.size() != list.size()) {
+				printSymbol("Error in size of function parameter");
+		} else {
+		for(int i =0; i < list.size(); i++) {
+				if(!compare(list.get(i)).equals(compare(paramlist.get(i)))) {
+				printSymbol("Error in Type function parameter");
+				}
+		}		
+		}
+  }
+  
+  private String compare(Object object) {
+		if(object.getClass() == Integer.class) {
+			return "int";
+	} else if(object.getClass() == String.class) {
+	return "string";
+	}
+	return null;
+  }
+  
+  
+:}; 
+
+parser code {:
+  
+
+  ScannerCUP scanner;
+
+  public Parser(ScannerCUP scan) {
+    super(scan);
+    scanner = scan;
+  }
+  
+  /* Change the method report_error so it will display the line and
+       column of where the error occurred in the input as well as the
+       reason for the error which is passed into the method in the
+       String 'message'. */
+    public void report_error(String message, Object info) {
+   
+        /* Create a StringBuilder called 'm' with the string 'Error' in it. */
+        StringBuilder m = new StringBuilder("Error");
+   
+        /* Check if the information passed to the method is the same
+           type as the type java_cup.runtime.Symbol. */
+        if (info instanceof java_cup.runtime.Symbol) {
+            /* Declare a java_cup.runtime.Symbol object 's' with the
+               information in the object info that is being typecasted
+               as a java_cup.runtime.Symbol object. */
+            java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
+   
+            /* Check if the line number in the input is greater or
+               equal to zero. */
+            if (s.left >= 0) {                
+                /* Add to the end of the StringBuilder error message
+                   the line number of the error in the input. */
+                m.append(" in line "+(s.left+1));   
+                /* Check if the column number in the input is greater
+                   or equal to zero. */
+                if (s.right >= 0)                    
+                    /* Add to the end of the StringBuilder error message
+                       the column number of the error in the input. */
+                    m.append(", column "+(s.right+1));
+            }
+        }
+   
+        /* Add to the end of the StringBuilder error message created in
+           this method the message that was passed into this method. */
+        m.append(" : "+message);
+   
+        /* Print the contents of the StringBuilder 'm', which contains
+           an error message, out on a line. */
+        System.err.println(m);
+    }
+   
+    /* Change the method report_fatal_error so when it reports a fatal
+       error it will display the line and column number of where the
+       fatal error occurred in the input as well as the reason for the
+       fatal error which is passed into the method in the object
+       'message' and then exit.*/
+    public void report_fatal_error(String message, Object info) {
+        report_error(message, info);
+        System.exit(1);
+    }
+
+:};
+
+
+
+
+
+terminal         SEMICOLON, COMMA, LPAR, RPAR, BEGIN, END,IF, ELSE, WHILE, READ, PUTS, BUNOP, ASSIGN, FOR, SET, PROC, LB, RB;
+terminal Integer TYPE, BINOP, UNOP, COMP, BBINOP, INTCONST;
+terminal String  IDENT,STRINGCONST;
+terminal Boolean BOOLCONST;
+
+non terminal       program;
+non terminal          decl;
+non terminal      stmtlist;
+non terminal          stmt;
+non terminal          expr;
+non terminal          proc, proc_tail,proc_head;
+non terminal	 identlist;
+non terminal    Integer      cond;
+
+precedence left ELSE, UNOP, BINOP, BUNOP, BBINOP;
+
+
+stmtlist  ::= stmtlist:sl stmt:s                            
+    | /* empty stmtlist */                                 
+    ;
+decl ::= TYPE IDENT:i identlist:il               
+                                                             
+    ;
+identlist  ::= identlist:il COMMA IDENT:i                  
+    | /* empty identlist*/                                 
+    ;
+stmt ::= SEMICOLON                                       
+    | BEGIN stmtlist:sl END                               
+    | TYPE IDENT:i expr:e 		   {: if((i != null) && symtable.contains(i)) {  
+													printSymbol("Variable declered before1!");} else { symtable.add(i);} ; RESULT = i; :}		                        
+    
+	| IDENT:i ASSIGN READ LPAR RPAR SEMICOLON           
+    | IDENT:i ASSIGN READ LPAR STRINGCONST:s RPAR SEMICOLON 
+    | PUTS STRINGCONST:s					                {: System.out.println("puts"); :}
+    | IF BEGIN cond:c END stmt:t ELSE stmt:e                {: System.out.println("if & else"); :}
+    | FOR BEGIN expr:e1 END BEGIN cond:c1 END BEGIN expr:e2 expr:e3 END stmt:s   {: System.out.println("forloop"); :}  
+	| PROC IDENT:i BEGIN proc_head:p END stmt  {: if((i != null) && functable.containsKey(i)) {  
+									 				printSymbol("function declered before1 so i should put cast in this if!");} else { functable.put(i, value);} ; RESULT = p; :}
+	| PUTS LB IDENT:i proc_tail:p RB     					{: if((i != null) && functable.containsKey(i)) {  
+									 				checkFunction(i, parameter);} else { printSymbol("Not match Function parameter");} ; RESULT = p; :}
+    | error:e                                               {: parser.report_error("Syntax error, skip rest",e); :}
+    ;
+	
+
+proc_tail ::= expr:e proc_tail        {: parameter.add(e); :}
+	| ;
+proc_head ::= expr:e proc_head        {: value.add(e); :}
+	| ;
+cond ::= BOOLCONST:c                                       
+    | LPAR cond:c RPAR                                     
+    | expr:e1 COMP:op expr:e2  	
+    | BUNOP cond:c                                       
+    | cond:c1 BBINOP:op cond:c2                            
+    ;
+/* Yes, this grammar does not adhere to precedence of multiplication over addition                             */
+/* This is due to the fact that it is introduced with an ambiguous grammar in the lecture, and was never fixed */
+expr ::= IDENT:i  		 {:RESULT = i;	 :}                                       
+    | INTCONST:c    	 {:RESULT = c;	 :}                                          
+    | LPAR expr:e RPAR   {:RESULT = e;	 :}                                      
+    | COMP expr:e        {:RESULT = e;	 :}                                  
+    | expr:e1 BINOP:op expr:e2                            
+    ;
