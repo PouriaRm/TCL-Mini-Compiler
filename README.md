@@ -41,7 +41,7 @@ puts "Bye"
 
 Like pervious stage.
 
-#### Note: Change the above code and trace it again. What will you see?
+#### Note: Change the code in above box and trace it again. What will you see?
 Here is an example:
 
 ![](https://github.com/PouriaRm/TCL-Mini-Compiler/blob/master/Detailed%20Video/Phase2.gif)
