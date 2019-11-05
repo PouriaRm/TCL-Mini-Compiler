@@ -39,7 +39,7 @@ puts "Bye"
 ```
 ### How to test it?
 
-Like pervious stage.
+Like a pervious stage.
 
 #### Note: Change the code in above box and trace it again. What will you see?
 Here is the answer:
